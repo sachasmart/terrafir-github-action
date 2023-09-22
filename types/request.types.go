@@ -6,4 +6,4 @@ type Post struct {
 	Input  string `json:"input"`
 }
 
-const URL string = "https://api.terrafir.com/"
+const URL string = "https://api.terrafir.com"
