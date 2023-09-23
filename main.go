@@ -86,6 +86,11 @@ func sendRequest(apiKey string, email string, inputFilePath string) {
 		fmt.Println(err)
 		return
 	}
+	formattedBody(body)
+
+}
+
+func formattedBody(body []byte) {
 	var formattedBody map[string]interface{}
 	if err := json.Unmarshal(body, &formattedBody); err != nil {
 		fmt.Println("Error unmarshaling JSON:", err)
