@@ -4,13 +4,13 @@ branding:
   icon: 'shield'
   color: 'blue'
 inputs:
-  api-key: 
+  apiKey: 
     description: 'API key for Terrafir'
     required: true
   email: 
     description: 'Email for Terrafir'
     required: true
-  plan-file:
+  path:
     description: 'Path to the terraform plan file'
 outputs:
   time:
@@ -19,6 +19,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.api-key }}
+    - ${{ inputs.path }}
+    - ${{ inputs.apiKey }}
     - ${{ inputs.email }}
-    - ${{ github.workspace }}/${{ inputs.plan-file }}
