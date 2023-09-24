@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -17,17 +16,25 @@ import (
 )
 
 var (
-	apiKey        = flag.String("apiKey", "", "API key Terrafir API.")
-	email         = flag.String("email", "", "Email address to send the request to.")
-	inputFilePath = flag.String("input", "", "Input file path to the plan that will be assessed.")
-	verboseMode   = flag.String("verbose", "", "Verbose mode")
+	apiKey      = getEnv("INPUT_APIKEY", "")
+	email       = getEnv("INPUT_EMAIL", "")
+	path        = getEnv("INPUT_PATH", "")
+	verboseMode = getEnv("verboseMode", "")
 )
 
+func getEnv(key, defaultValue string) string {
+	fmt.Println(os.Environ())
+	value := os.Getenv(key)
+	if value == "" {
+		fmt.Print("Using default value for ", key, ": ", defaultValue, "\n")
+		return defaultValue
+	}
+	return value
+}+
+
 func main() {
-	flag.Parse()
 	preRequestCheck()
-	checkEnvironmentVariables(*apiKey, *email, *inputFilePath)
-	sendRequest(*apiKey, *email, *inputFilePath)
+	sendRequest(apiKey, email)
 }
 
 func preRequestCheck() {
@@ -43,15 +50,15 @@ func preRequestCheck() {
 	color.Green(fmt.Sprintf("API is available %s", response.Status))
 }
 
-func sendRequest(apiKey string, email string, inputFilePath string) {
-	color.Green(fmt.Sprintf("Using input file: %s", inputFilePath))
+func sendRequest(apiKey string, email string) {
+	color.Green(fmt.Sprintf("Using input file: %s", "./input.json"))
 
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
-	file, errFile1 := os.Open(inputFilePath)
+	file, errFile1 := os.Open("./input.json")
 	defer file.Close()
 	part1,
-		errFile1 := writer.CreateFormFile("plan", filepath.Base(inputFilePath))
+		errFile1 := writer.CreateFormFile("plan", filepath.Base("./input.json"))
 	_, errFile1 = io.Copy(part1, file)
 	if errFile1 != nil {
 		fmt.Println(errFile1)
@@ -98,16 +105,4 @@ func formattedBody(body []byte) {
 	}
 
 	fmt.Println(formattedBody)
-}
-
-func checkEnvironmentVariables(apiKey string, email string, input string) {
-	if apiKey == "" {
-		log.Fatalf("API key not provided.")
-	}
-	if email == "" {
-		log.Fatalf("Email address not provided.")
-	}
-	if input == "" {
-		log.Fatalf("Input not provided.")
-	}
 }

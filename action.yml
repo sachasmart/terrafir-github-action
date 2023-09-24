@@ -1,17 +1,15 @@
 name: 'Terrafir Plan Assessment'
-description: 'Assess the plan file for security vulnerabilities'
+description: 'Use Terrafir to assess the Terraform plan file for security vulnerabilities'
 branding:
   icon: 'shield'
   color: 'blue'
 inputs:
-  api-key: 
+  apiKey: 
     description: 'API key for Terrafir'
     required: true
   email: 
     description: 'Email for Terrafir'
     required: true
-  plan-file:
-    description: 'Path to the terraform plan file'
 outputs:
   time:
     description: 'The time plan was assessed' #TODO
@@ -19,6 +17,5 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.api-key }}
+    - ${{ inputs.apiKey }}
     - ${{ inputs.email }}
-    - ${{ github.workspace }}/${{ inputs.plan-file }}

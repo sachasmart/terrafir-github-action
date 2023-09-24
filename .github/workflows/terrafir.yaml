@@ -1,39 +1,3 @@
-# Terrafir Github Action
-## 👋 Overview 
-This Github Action is used to assess Terraform plans using [Terrafir](https://www.terrafir.com). It is intended to be used in a CI/CD pipeline to assess Terraform plans before they are applied. You can see the output of the plan in the Terrafir dashboard or the Github Action output.
-
-## 🚀 Usage
-### Inputs
-| Name | Description | Required |
-| --- | --- | --- |
-| apiKey | The API key used to authenticate with Terrafir | true |
-| email | The email address of the user who owns the API key | true |
-| __WIP: verbose__ | Whether or not to print the assessment to the Github Action output | false |
-
-
-### Flow
-
-```mermaid
----
-title: Terrafir Github Action
----
-flowchart TD
-    A["Github Action
-        Inputs:
-        - Terrafir API Key (apiKey)
-        - Email of Terrafir Account (email)
-    "]--Spins up Docker Container - Dockerfile-->B[Container]
-    B --Make Post Request to Terrafir API-->C[Terrafir API]
-    C --Authorizes Request-->D[AuthService]
-    D -.Allow Plan Assessment.->E
-    C <--Assesses Plan -->E[PlanService]
-    E <--Sent Plan to Policy Engine -->F[Policy Engine]
-    C --Processes Assessment and Returns Result to Container-->B
-    B --Receives Assessment and Creates Github Comment Output-->A
-```
-
-### Sample CI/CD Pipeline Using Terrafir Github Action
-```yaml
 name: Terrafir Test Action
 
 on:
@@ -60,6 +24,7 @@ on:
           - azure
 
 env:
+  TF_LOG: INFO
   CLOUD_PROVIDER: aws
   REGION: us-east-2
 
@@ -106,11 +71,11 @@ jobs:
         id: plan
         run: |
           terraform plan --out tfplan.binary
-          terraform show -json tfplan.binary > input.json # Currently needs to output to input.json
+          terraform show -json tfplan.binary > input.json
 
       - name: Run Terrafir
         uses: sachasmart/terrafir-github-action@v1
         with:
+          path: input.json
           email: ${{ secrets.TERRAFIR_EMAIL }}
           apiKey: ${{ secrets.TERRAFIR_API_KEY }}
-```
