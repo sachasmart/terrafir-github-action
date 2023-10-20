@@ -1,15 +1,18 @@
 # Terrafir Github Action
-## 👋 Overview 
+
+## 👋 Overview
+
 This Github Action is used to assess Terraform plans using [Terrafir](https://www.terrafir.com). It is intended to be used in a CI/CD pipeline to assess Terraform plans before they are applied. You can see the output of the plan in the Terrafir dashboard or the Github Action output.
 
 ## 🚀 Usage
-### Inputs
-| Name | Description | Required |
-| --- | --- | --- |
-| apiKey | The API key used to authenticate with Terrafir | true |
-| email | The email address of the user who owns the API key | true |
-| __WIP: verbose__ | Whether or not to print the assessment to the Github Action output | false |
 
+### Inputs
+
+| Name             | Description                                                        | Required |
+| ---------------- | ------------------------------------------------------------------ | -------- |
+| apiKey           | The API key used to authenticate with Terrafir                     | true     |
+| email            | The email address of the user who owns the API key                 | true     |
+| **WIP: verbose** | Whether or not to print the assessment to the Github Action output | false    |
 
 ### Flow
 
@@ -33,6 +36,7 @@ flowchart TD
 ```
 
 ### Sample CI/CD Pipeline Using Terrafir Github Action
+
 ```yaml
 name: Terrafir Test Action
 

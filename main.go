@@ -30,7 +30,7 @@ func getEnv(key, defaultValue string) string {
 		return defaultValue
 	}
 	return value
-}+
+}
 
 func main() {
 	preRequestCheck()
